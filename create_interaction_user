@@ -1,2 +1,2 @@
-ksecret rotate --name mongodb_intuser
-kmongo admin set --name intuser --password __secret:mongodb_intuser:latest__ --creator officium,market_data,pieriansea,pierianauth
+#ksecret rotate --name mongodb_intuser
+kmongo admin set --name intuser --password __secret:mongodb_intuser:latest__ --creator officium,market_data,pieriansea,pierianauth,test_db

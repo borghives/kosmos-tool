@@ -1,0 +1,61 @@
+{
+    "configurations": [
+        {
+            "name": "kmongo admin list",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceFolder}/kmongo",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "admin",
+                "list"
+            ]
+        },
+        {
+            "name": "kmongo admin set",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceFolder}/kmongo",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "user",
+                "set",
+                "--name",
+                "pierianuser",
+                "--password",
+                "[secret:mongodb_pierianuser:latest]",
+                "--write",
+                "pieriansea"
+            ]
+        },
+        {
+            "name": "kmongo data init",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceFolder}/kmongo",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "data",
+                "init",
+                "--file",
+                "db.yaml"
+            ]
+        },
+        {
+            "name": "kpage pull",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceFolder}/kpage",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "pull",
+                "--page",
+                "692fe93be3da011c883361ca"
+            ]
+        }
+    ]
+}

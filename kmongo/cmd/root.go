@@ -29,6 +29,6 @@ func init() {
 
 	cobra.OnInitialize(func() {
 		ether.CollapseConstants().MergeFromFile("tool.env").MergeFromCmd(rootCmd)
-		ether.ColapseObserverConstants().MergeFromFile("tool.env").MergeFromCmd(rootCmd)
+		ether.CollapseObserverConstants().MergeFromFile("tool.env").MergeFromCmd(rootCmd)
 	})
 }
