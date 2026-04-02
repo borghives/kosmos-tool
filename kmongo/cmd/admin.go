@@ -31,8 +31,8 @@ var setAdminCmd = &cobra.Command{
 
 		fmt.Printf("Action: Creating MongoDB admin user '%s'...\n", name)
 
-		observer := kosmos.SummonObserverFor(observation.PurposeAffinityAdmin)
-		defer observer.Close()
+		dataLibrary := kosmos.SummonObservationFor(observation.PurposeAffinityAdmin)
+		defer dataLibrary.Close()
 
 		var err error
 		if kosmos.IsSecretSource(password) {
@@ -47,7 +47,7 @@ var setAdminCmd = &cobra.Command{
 			IsAdmin:    true,
 		}
 
-		err = observer.UpdateMember(name, password, responsibility, true)
+		err = dataLibrary.UpdateMember(name, password, responsibility, true)
 		if err != nil {
 			log.Fatalf("Failed to set admin: %v", err)
 		}
@@ -60,10 +60,10 @@ var listAdminCmd = &cobra.Command{
 	Short: "List MongoDB admin",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("Action: Listing MongoDB admin...\n")
-		observer := kosmos.SummonObserverFor(observation.PurposeAffinityAdmin)
-		defer observer.Close()
+		dataLibrary := kosmos.SummonObservationFor(observation.PurposeAffinityAdmin)
+		defer dataLibrary.Close()
 
-		users, err := observer.ListMembers()
+		users, err := dataLibrary.ListMembers()
 		if err != nil {
 			log.Fatalf("Failed to list users: %v", err)
 		}

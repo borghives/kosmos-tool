@@ -19,10 +19,10 @@ var rsStatusCmd = &cobra.Command{
 	Short: "Get MongoDB replica set status",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("Action: Get MongoDB replica set status...\n")
-		observer := kosmos.SummonObserverFor(observation.PurposeAffinityAdmin)
-		defer observer.Close()
+		dataLibrary := kosmos.SummonObservationFor(observation.PurposeAffinityAdmin)
+		defer dataLibrary.Close()
 
-		status, err := observer.Status()
+		status, err := dataLibrary.Status()
 		if err != nil {
 			log.Fatalf("Failed to get replica set status: %v", err)
 		}
@@ -38,10 +38,10 @@ var reVoteCmd = &cobra.Command{
 	Short: "Force MongoDB replica set to revote",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("Action: Force MongoDB replica set to revote...\n")
-		observer := kosmos.SummonObserverFor(observation.PurposeAffinityAdmin)
-		defer observer.Close()
+		dataLibrary := kosmos.SummonObservationFor(observation.PurposeAffinityAdmin)
+		defer dataLibrary.Close()
 
-		err := observer.ReelectPrimary()
+		err := dataLibrary.ReelectPrimary()
 		if err != nil {
 			log.Fatalf("Failed to force election: %v", err)
 		}

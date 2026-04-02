@@ -24,6 +24,6 @@ func init() {
 	cobra.OnInitialize(func() {
 		rootCmd.PersistentFlags().StringP("uri", "u", "", "MongoDB connection URI")
 		ether.CollapseConstants().MergeFromFile("tool.env").MergeFromCmd(rootCmd)
-		ether.CollapseObserverConstants().MergeFromFile("tool.env").MergeFromCmd(rootCmd)
+		ether.CollapseDataverseConstants().MergeFromFile("tool.env").MergeFromCmd(rootCmd)
 	})
 }

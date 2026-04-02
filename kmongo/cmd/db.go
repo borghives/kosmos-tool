@@ -90,8 +90,8 @@ var dbDeclareCmd = &cobra.Command{
 		}
 
 		// 2. Connect to MongoDB
-		observer := kosmos.SummonObserverFor(observation.PurposeAffinityAdmin)
-		defer observer.Close()
+		dataLibrary := kosmos.SummonObservationFor(observation.PurposeAffinityAdmin)
+		defer dataLibrary.Close()
 
 		// 3. Process the configuration
 		ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
@@ -99,7 +99,7 @@ var dbDeclareCmd = &cobra.Command{
 
 		for _, dbConfig := range dataConfig.Databases {
 			fmt.Printf("Processing database: %s\n", dbConfig.Name)
-			db := observer.Database(dbConfig.Name)
+			db := dataLibrary.Client().Database(dbConfig.Name)
 
 			for _, collConfig := range dbConfig.Collections {
 				fmt.Printf("  Processing collection: %s\n", collConfig.Name)
@@ -156,7 +156,7 @@ var dbDeclareCmd = &cobra.Command{
 				IsAdmin:      userConfig.Admin,
 			}
 
-			err = observer.UpdateMember(userConfig.Name, password, responsibility, true)
+			err = dataLibrary.UpdateMember(userConfig.Name, password, responsibility, true)
 			if err != nil {
 				log.Fatalf("Failed to set user: %v", err)
 			}
