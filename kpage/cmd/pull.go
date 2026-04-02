@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"log"
-	"os"
 
 	km "github.com/borghives/kosmos-go"
 	"github.com/borghives/sitepages"
@@ -19,12 +18,22 @@ var pullCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		pageIDStrs, _ := cmd.Flags().GetStringSlice("page")
 		output, _ := cmd.Flags().GetString("output")
+		newIDStr, _ := cmd.Flags().GetString("new")
 
 		if len(pageIDStrs) == 0 {
 			log.Fatalf("Page ID is required")
 		}
 
-		pageIDs := make([]any, 0, len(pageIDStrs))
+		var newID bson.ObjectID
+		if newIDStr != "" {
+			var err error
+			newID, err = bson.ObjectIDFromHex(newIDStr)
+			if err != nil {
+				fmt.Printf("Failed to parse new page ID: newID=%s, error=%v\n", newIDStr, err)
+			}
+		}
+
+		pageIDs := make([]bson.ObjectID, 0, len(pageIDStrs))
 		for _, pageIdStr := range pageIDStrs {
 			fmt.Printf("Action: Pulling page '%s'...\n", pageIdStr)
 
@@ -36,31 +45,45 @@ var pullCmd = &cobra.Command{
 		}
 
 		pages, err := km.Filter[sitepages.SitePage](
-			km.Fld("ID").In(pageIDs...),
+			km.Fld("ID").ID().In(pageIDs...),
 		).PullAll()
 
 		if err != nil {
 			log.Fatalf("Failed to pull pages: %v", err)
 		}
 
-		for _, page := range pages {
+		for i, page := range pages {
+			fmt.Println("\n--- Page Title ---")
+			fmt.Println(page.Title)
+			fmt.Println("----------------------")
 
-			// Determine output
-			if output == "" {
-				// Default to stdout
-				fmt.Println("\n--- Page Title ---")
-				fmt.Println(page.Title)
-				fmt.Println("----------------------")
-			} else {
-				// Write to file
-				err := os.WriteFile(output, []byte(page.Title), 0644)
-				if err != nil {
-					log.Fatalf("Failed to write page to file: %v", err)
-				}
+			stanza, err := km.Filter[sitepages.Stanza](
+				km.Fld("ID").ID().In(page.Contents...),
+			).PullAll()
 
-				fmt.Printf("Successfully wrote page to '%s'\n", output)
+			if err != nil {
+				log.Fatalf("Failed to pull stanzas: %v", err)
 			}
+
+			pages[i].StanzaData = stanza
+
+			if page.ID == newID {
+				pages[i].Root = bson.NilObjectID
+			}
+
 		}
+		// Determine output
+		if output == "" {
+			return
+		}
+
+		err = sitepages.SaveSitePages(output, pages)
+		if err != nil {
+			log.Fatalf("Failed to write page to file: %v", err)
+		}
+
+		fmt.Printf("Successfully wrote page to '%s'\n", output)
+
 	},
 }
 
@@ -72,6 +95,7 @@ func init() {
 
 	// Define flags
 	pullCmd.Flags().StringSliceVarP(&pages, "page", "p", []string{}, "List of pages to pull (comma-separated or multiple flags)")
+	pullCmd.Flags().StringP("new", "n", "", "ID of the page to be marked as a page genesis.  ID must be in the list of pages to pull.")
 	pullCmd.Flags().StringP("output", "o", "", "Output file path (optional)")
 
 	// Mark required flags

@@ -33,3 +33,4 @@ go.work.sum
 kmongo/kmongo
 kpage/kpage
 ksecret/ksecret
+site.json
