@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 
 	"github.com/borghives/kosmos-go"
 	"github.com/borghives/kosmos-go/observation"
@@ -153,7 +152,11 @@ func createCollection(ctx context.Context, db *mongo.Database, collConfig Collec
 
 		fmt.Printf("    -> Calling CreateOne for index %v...\n", keysDoc)
 		name, err := collection.Indexes().CreateOne(ctx, indexModel)
-		fmt.Printf("    <- CreateOne returned name: %s, error: %v\n", name, err)
+		if err != nil {
+			fmt.Printf("    <- CreateOne returned name: %s, error: %v\n", name, err)
+		} else {
+			fmt.Printf("    <- CreateOne name: %s succeeded\n", name)
+		}
 		if err != nil {
 			log.Fatalf("    Failed to create index on collection %s: %v", collConfig.Name, err)
 		}
@@ -172,8 +175,10 @@ func processingDatabase(dbConfig DatabaseConfig) {
 	dataverse := kosmos.SummonObservationFor(observation.PurposeAffinityCreator)
 	defer dataverse.Close()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
-	defer cancel()
+	// ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	// defer cancel()
+
+	ctx := context.Background()
 
 	db := dataverse.BranchDatabase(dbConfig.Name)
 
