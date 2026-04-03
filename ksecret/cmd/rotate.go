@@ -24,7 +24,7 @@ var rotateCmd = &cobra.Command{
 		manager := kosmos.SummonSecretManager()
 
 		ttl, _ := cmd.Flags().GetInt("ttl")
-		if manager.IsSecretStale(secretName, ttl) {
+		if stale, err := manager.IsSecretStale(secretName, ttl); err != nil || stale {
 			fmt.Println("Generating random payload for secret.")
 			payload := GenerateRandomString(32)
 			manager.CreateSecret(secretName)
