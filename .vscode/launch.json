@@ -54,7 +54,7 @@
             "args": [
                 "pull",
                 "--page",
-                "692fe93be3da011c883361ca",
+                "692fe93be3da011c883361ca,c5da4ea4a1a12dd941c2cd3a",
                 "--output",
                 "site.json"
             ]

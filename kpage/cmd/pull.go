@@ -19,6 +19,7 @@ var pullCmd = &cobra.Command{
 		pageIDStrs, _ := cmd.Flags().GetStringSlice("page")
 		output, _ := cmd.Flags().GetString("output")
 		newIDStr, _ := cmd.Flags().GetString("new")
+		mainIDStr, _ := cmd.Flags().GetString("main")
 
 		if len(pageIDStrs) == 0 {
 			log.Fatalf("Page ID is required")
@@ -33,7 +34,16 @@ var pullCmd = &cobra.Command{
 			}
 		}
 
-		pageIDs := make([]bson.ObjectID, 0, len(pageIDStrs))
+		var mainID bson.ObjectID
+		if mainIDStr != "" {
+			var err error
+			mainID, err = bson.ObjectIDFromHex(mainIDStr)
+			if err != nil {
+				log.Fatalf("Failed to parse main page ID: %v", err)
+			}
+		}
+
+		pageIDs := make([]bson.ObjectID, 0, len(pageIDStrs)+2)
 		for _, pageIdStr := range pageIDStrs {
 			fmt.Printf("Action: Pulling page '%s'...\n", pageIdStr)
 
@@ -42,6 +52,14 @@ var pullCmd = &cobra.Command{
 				log.Fatalf("Failed to parse page ID: %v", err)
 			}
 			pageIDs = append(pageIDs, id)
+		}
+
+		if mainID != bson.NilObjectID {
+			pageIDs = append(pageIDs, mainID)
+		}
+
+		if newID != bson.NilObjectID {
+			pageIDs = append(pageIDs, newID)
 		}
 
 		pages, err := km.Filter[sitepages.SitePage](
@@ -53,10 +71,6 @@ var pullCmd = &cobra.Command{
 		}
 
 		for i, page := range pages {
-			fmt.Println("\n--- Page Title ---")
-			fmt.Println(page.Title)
-			fmt.Println("----------------------")
-
 			stanza, err := km.Filter[sitepages.Stanza](
 				km.Fld("ID").ID().In(page.Contents...),
 			).PullAll()
@@ -70,7 +84,15 @@ var pullCmd = &cobra.Command{
 			if page.ID == newID {
 				pages[i].Root = bson.NilObjectID
 			}
+		}
 
+		//find main page and swap it to the front
+		for i, page := range pages {
+			if page.ID == mainID {
+				remaining := append(pages[:i], pages[i+1:]...)
+				pages = append([]sitepages.SitePage{page}, remaining...)
+				break
+			}
 		}
 		// Determine output
 		if output == "" {
@@ -95,7 +117,8 @@ func init() {
 
 	// Define flags
 	pullCmd.Flags().StringSliceVarP(&pages, "page", "p", []string{}, "List of pages to pull (comma-separated or multiple flags)")
-	pullCmd.Flags().StringP("new", "n", "", "ID of the page to be marked as a page genesis.  ID must be in the list of pages to pull.")
+	pullCmd.Flags().StringP("new", "n", "", "ID of the page to be marked as a page genesis.")
+	pullCmd.Flags().StringP("main", "m", "", "ID of the page to be marked as a main page.")
 	pullCmd.Flags().StringP("output", "o", "", "Output file path (optional)")
 
 	// Mark required flags
