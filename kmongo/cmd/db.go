@@ -192,7 +192,7 @@ func processingUser(userConfig UserConfig) {
 	dataverse := kosmos.SummonObservationFor(observation.PurposeAffinityAdmin)
 	defer dataverse.Close()
 
-	password, err := kosmos.CollapseSecret(userConfig.SecretSrc)
+	password, err := kosmos.CollapseSecretString(userConfig.SecretSrc)
 	if err != nil {
 		log.Fatalf("Failed to extract password source : %v", err)
 	}

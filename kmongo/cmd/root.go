@@ -3,7 +3,7 @@ package cmd
 import (
 	"os"
 
-	"github.com/borghives/kosmos-go/ether"
+	"github.com/borghives/kosmos-go"
 	"github.com/spf13/cobra"
 )
 
@@ -28,7 +28,6 @@ func init() {
 	rootCmd.AddCommand(rsCmd)
 
 	cobra.OnInitialize(func() {
-		ether.CollapseConstants().MergeFromFile("tool.env").MergeFromCmd(rootCmd)
-		ether.CollapseDataverseConstants().MergeFromFile("tool.env").MergeFromCmd(rootCmd)
+		kosmos.Ignite(rootCmd, "tool.env")
 	})
 }

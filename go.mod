@@ -3,7 +3,7 @@ module github.com/borghives/kosmos-tool
 go 1.26.1
 
 require (
-	github.com/borghives/kosmos-go v0.9.1
+	github.com/borghives/kosmos-go v1.0.2
 	github.com/borghives/sitepages v1.2.5
 	github.com/spf13/cobra v1.10.2
 	go.mongodb.org/mongo-driver/v2 v2.5.0

@@ -18,7 +18,7 @@ var extractCmd = &cobra.Command{
 			log.Fatalf("Secret source is required")
 		}
 
-		secret, err := kosmos.CollapseSecret(source)
+		secret, err := kosmos.CollapseSecretString(source)
 		if err != nil {
 			log.Fatalf("failed to collapse secret: %v", err)
 		}

@@ -35,8 +35,8 @@ var setAdminCmd = &cobra.Command{
 		defer dataLibrary.Close()
 
 		var err error
-		if kosmos.IsSecretSource(password) {
-			password, err = kosmos.CollapseSecret(password)
+		if kosmos.IsSecretSourceFormat(password) {
+			password, err = kosmos.CollapseSecretString(password)
 			if err != nil {
 				log.Fatalf("Failed to extract password: %v", err)
 			}
