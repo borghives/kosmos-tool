@@ -8,6 +8,7 @@ install:
 	go install ./kmongo
 	go install ./ksecret
 	go install ./kpage
+	go install ./kyake
 
 clean:
 	rm -f kmongo/kmongo
