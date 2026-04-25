@@ -29,6 +29,6 @@ func init() {
 	rootCmd.PersistentFlags().StringP("project", "p", "", "Project ID")
 
 	cobra.OnInitialize(func() {
-		kosmos.Ignite(rootCmd, "tool.env")
+		kosmos.IgniteBase(rootCmd, "tool.env")
 	})
 }
