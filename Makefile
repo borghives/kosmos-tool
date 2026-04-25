@@ -2,6 +2,7 @@ build:
 	go build -o kmongo ./kmongo
 	go build -o ksecret ./ksecret
 	go build -o kpage ./kpage
+	go build -o kyake ./kyake
 
 install:
 	go install ./kmongo
