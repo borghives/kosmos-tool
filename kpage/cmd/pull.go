@@ -63,7 +63,7 @@ var pullCmd = &cobra.Command{
 			pageIDs = append(pageIDs, newID)
 		}
 
-		pages, err := km.Filter[sitepages.SitePage](
+		pages, err := km.Detect[sitepages.SitePage](
 			km.Fld("ID").ID().In(pageIDs...),
 		).PullAll(context.Background())
 
@@ -72,7 +72,7 @@ var pullCmd = &cobra.Command{
 		}
 
 		for i, page := range pages {
-			stanza, err := km.Filter[sitepages.Stanza](
+			stanza, err := km.Detect[sitepages.Stanza](
 				km.Fld("ID").ID().In(page.Contents...),
 			).PullAll(context.Background())
 
