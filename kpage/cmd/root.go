@@ -9,7 +9,7 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:   "kpage",
-	Short: "A CLI tool to manage pages",
+	Short: "A CLI tool to manage page",
 }
 
 func Execute() {

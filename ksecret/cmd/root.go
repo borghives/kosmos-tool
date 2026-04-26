@@ -9,8 +9,8 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "sitesecret",
-	Short: "A CLI tool to manage secret for a site",
+	Use:   "ksecret",
+	Short: "A CLI tool to manage secret",
 }
 
 // Execute is called by main.main().

@@ -8,8 +8,8 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "sitedb",
-	Short: "A CLI tool to manage MongoDB environments for a site",
+	Use:   "kmongo",
+	Short: "A CLI tool to manage MongoDB environments",
 }
 
 // Execute is called by main.main().
