@@ -7,6 +7,8 @@ import (
 
 	"github.com/borghives/kosmos-go"
 	"github.com/spf13/cobra"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func GeneratePayload(cmd *cobra.Command) string {
@@ -45,21 +47,36 @@ var newCmd = &cobra.Command{
 			log.Fatalf("Secret name is required")
 		}
 
-		fmt.Printf("Secret name: %s\n", secretName)
+		force, _ := cmd.Flags().GetBool("force")
 
-		payload := GeneratePayload(cmd)
+		fmt.Printf("Secret name: %s\n", secretName)
 
 		// 1. Build the request to list secrets
 		manager := kosmos.SummonSecretManager()
 
-		//ignore error
-		manager.CreateSecret(secretName)
-		manager.AddSecretVersion(secretName, payload)
+		//ignore error if forced
+		err := manager.CreateSecret(secretName)
+		if err != nil && !force {
+			if status.Code(err) != codes.AlreadyExists {
+				log.Fatalf("Failed Creating secret: %s, %v", secretName, err)
+			}
+			fmt.Printf("Secret already exists: %s\n", secretName)
+			return
+		}
+
+		payload := GeneratePayload(cmd)
+
+		err = manager.AddSecretVersion(secretName, payload)
+		if err != nil {
+			log.Fatalf("Failed Adding secret version: %s, %v", secretName, err)
+		}
+		fmt.Printf("Successfully Created secret: %s\n", secretName)
 	},
 }
 
 func init() {
 	newCmd.Flags().StringP("name", "n", "", "Secret name")
 	newCmd.Flags().StringP("payload", "", "", "Secret payload")
+	newCmd.Flags().BoolP("force", "f", false, "Force new payload if secret exists")
 
 }
