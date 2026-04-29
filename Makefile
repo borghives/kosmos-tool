@@ -17,3 +17,6 @@ clean:
 	rm -f ksecret/ksecret.exe
 	rm -f kpage/kpage
 	rm -f kpage/kpage.exe
+
+tag:
+	uptag
