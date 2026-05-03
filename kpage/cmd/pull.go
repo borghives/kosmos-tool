@@ -7,6 +7,7 @@ import (
 
 	km "github.com/borghives/kosmos-go"
 	"github.com/borghives/sitepages"
+	"github.com/borghives/websession"
 	"go.mongodb.org/mongo-driver/v2/bson"
 
 	"github.com/spf13/cobra"
@@ -95,6 +96,15 @@ var pullCmd = &cobra.Command{
 				break
 			}
 		}
+
+		//clean linkname
+		for _, page := range pages {
+			safeTitle := websession.MakeUrlSafe(page.Title)
+			if safeTitle != "" {
+				page.LinkName = safeTitle
+			}
+		}
+
 		// Determine output
 		if output == "" {
 			return
