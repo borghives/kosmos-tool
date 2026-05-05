@@ -5,9 +5,11 @@ go 1.26.1
 require (
 	github.com/borghives/kosmos-go v1.0.2
 	github.com/borghives/sitepages v1.2.5
+	github.com/borghives/websession v0.2.0
 	github.com/joho/godotenv v1.5.1
 	github.com/spf13/cobra v1.10.2
 	go.mongodb.org/mongo-driver/v2 v2.5.1
+	google.golang.org/grpc v1.80.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
@@ -18,7 +20,6 @@ require (
 	cloud.google.com/go/iam v1.9.0 // indirect
 	cloud.google.com/go/secretmanager v1.19.0 // indirect
 	github.com/borghives/entanglement v0.2.0 // indirect
-	github.com/borghives/websession v0.2.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/danieljoos/wincred v1.2.3 // indirect
 	github.com/envoyproxy/go-control-plane/envoy v1.37.0 // indirect
@@ -63,6 +64,5 @@ require (
 	google.golang.org/genproto v0.0.0-20260420184626-e10c466a9529 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20260420184626-e10c466a9529 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260420184626-e10c466a9529 // indirect
-	google.golang.org/grpc v1.80.0 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
 )
