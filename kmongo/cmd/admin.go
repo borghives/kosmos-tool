@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/borghives/kosmos-go"
-	"github.com/borghives/kosmos-go/observation"
+	"github.com/borghives/kosmos-go/matter"
 
 	"github.com/spf13/cobra"
 )
@@ -31,7 +31,7 @@ var setAdminCmd = &cobra.Command{
 
 		fmt.Printf("Action: Creating MongoDB admin user '%s'...\n", name)
 
-		dataLibrary := kosmos.SummonObservationFor(observation.PurposeAffinityAdmin)
+		dataLibrary := kosmos.SummonObservationFor(matter.PurposeAffinityAdmin)
 		defer dataLibrary.Close()
 
 		var err error
@@ -42,7 +42,7 @@ var setAdminCmd = &cobra.Command{
 			}
 		}
 
-		responsibility := observation.MemberResponsibility{
+		responsibility := matter.MemberResponsibility{
 			CreatorDbs: creator,
 			IsAdmin:    true,
 		}
@@ -60,7 +60,7 @@ var listAdminCmd = &cobra.Command{
 	Short: "List MongoDB admin",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("Action: Listing MongoDB admin...\n")
-		dataLibrary := kosmos.SummonObservationFor(observation.PurposeAffinityAdmin)
+		dataLibrary := kosmos.SummonObservationFor(matter.PurposeAffinityAdmin)
 		defer dataLibrary.Close()
 
 		users, err := dataLibrary.ListMembers()

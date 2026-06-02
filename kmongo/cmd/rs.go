@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/borghives/kosmos-go"
-	"github.com/borghives/kosmos-go/observation"
+	"github.com/borghives/kosmos-go/matter"
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +19,7 @@ var rsStatusCmd = &cobra.Command{
 	Short: "Get MongoDB replica set status",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("Action: Get MongoDB replica set status...\n")
-		dataLibrary := kosmos.SummonObservationFor(observation.PurposeAffinityAdmin)
+		dataLibrary := kosmos.SummonObservationFor(matter.PurposeAffinityAdmin)
 		defer dataLibrary.Close()
 
 		status, err := dataLibrary.Status()
@@ -38,7 +38,7 @@ var reVoteCmd = &cobra.Command{
 	Short: "Force MongoDB replica set to revote",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("Action: Force MongoDB replica set to revote...\n")
-		dataLibrary := kosmos.SummonObservationFor(observation.PurposeAffinityAdmin)
+		dataLibrary := kosmos.SummonObservationFor(matter.PurposeAffinityAdmin)
 		defer dataLibrary.Close()
 
 		err := dataLibrary.ReelectPrimary()
@@ -48,7 +48,7 @@ var reVoteCmd = &cobra.Command{
 	},
 }
 
-func printSyncStatus(status observation.RSStatus) {
+func printSyncStatus(status matter.RSStatus) {
 	fmt.Printf("REPLICA SET: %s\n", status.Set)
 	fmt.Printf("%-25s %-12s %-25s %s\n", "NAME", "STATE", "OPTIME (DATE)", "SYNC SOURCE")
 	fmt.Println("-----------------------------------------------------------------------------------------")
@@ -74,7 +74,7 @@ func printSyncStatus(status observation.RSStatus) {
 		)
 	}
 }
-func printServerHealth(stats observation.ServerStatus) {
+func printServerHealth(stats matter.ServerStatus) {
 
 	fmt.Printf("--- Server Health ---\n")
 	fmt.Printf("Uptime:      %d seconds\n", stats.Uptime)

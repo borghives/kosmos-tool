@@ -9,7 +9,7 @@ import (
 	"text/tabwriter"
 
 	"github.com/borghives/kosmos-go"
-	"github.com/borghives/kosmos-go/observation"
+	"github.com/borghives/kosmos-go/matter"
 	"github.com/spf13/cobra"
 )
 
@@ -37,7 +37,7 @@ var setUserCmd = &cobra.Command{
 		fmt.Printf("Action: Set MongoDB user '%s'...\n", name)
 		fmt.Printf("Read permission: %v\n", readDb)
 		fmt.Printf("ReadWrite permission: %v\n", readWriteDb)
-		dataLibrary := kosmos.SummonObservationFor(observation.PurposeAffinityAdmin)
+		dataLibrary := kosmos.SummonObservationFor(matter.PurposeAffinityAdmin)
 		defer dataLibrary.Close()
 
 		var err error
@@ -48,7 +48,7 @@ var setUserCmd = &cobra.Command{
 			}
 		}
 
-		responsibility := observation.MemberResponsibility{
+		responsibility := matter.MemberResponsibility{
 			ReadDbs:      readDb,
 			ReadWriteDbs: readWriteDb,
 		}
@@ -72,7 +72,7 @@ var removeUserCmd = &cobra.Command{
 		}
 
 		fmt.Printf("Action: Remove MongoDB user '%s'...\n", name)
-		dataLibrary := kosmos.SummonObservationFor(observation.PurposeAffinityAdmin)
+		dataLibrary := kosmos.SummonObservationFor(matter.PurposeAffinityAdmin)
 		defer dataLibrary.Close()
 
 		err := dataLibrary.RemoveMember(name)
@@ -88,7 +88,7 @@ var listUserCmd = &cobra.Command{
 	Short: "List MongoDB users",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("Action: Listing MongoDB users...\n")
-		dataLibrary := kosmos.SummonObservationFor(observation.PurposeAffinityAdmin)
+		dataLibrary := kosmos.SummonObservationFor(matter.PurposeAffinityAdmin)
 		defer dataLibrary.Close()
 
 		users, err := dataLibrary.ListMembers()
@@ -100,7 +100,7 @@ var listUserCmd = &cobra.Command{
 	},
 }
 
-func printUserInfo(res *observation.MembersInfoResponse, filterAdmin bool) {
+func printUserInfo(res *matter.MembersInfoResponse, filterAdmin bool) {
 	if res == nil {
 		log.Fatalf("Empty User Info")
 	}

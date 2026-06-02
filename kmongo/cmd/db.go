@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/borghives/kosmos-go"
-	"github.com/borghives/kosmos-go/observation"
+	"github.com/borghives/kosmos-go/matter"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
@@ -172,7 +172,7 @@ func processingDatabase(dbConfig DatabaseConfig) {
 	}
 
 	fmt.Printf("Processing database branch name: %s\n", branchName)
-	dataverse := kosmos.SummonObservationFor(observation.PurposeAffinityCreator)
+	dataverse := kosmos.SummonObservationFor(matter.PurposeAffinityCreator)
 	defer dataverse.Close()
 
 	// ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
@@ -189,7 +189,7 @@ func processingDatabase(dbConfig DatabaseConfig) {
 
 func processingUser(userConfig UserConfig) {
 	fmt.Printf("Processing user: %s\n", userConfig.Name)
-	dataverse := kosmos.SummonObservationFor(observation.PurposeAffinityAdmin)
+	dataverse := kosmos.SummonObservationFor(matter.PurposeAffinityAdmin)
 	defer dataverse.Close()
 
 	password, err := kosmos.CollapseSecretString(userConfig.SecretSrc)
@@ -197,7 +197,7 @@ func processingUser(userConfig UserConfig) {
 		log.Fatalf("Failed to extract password source : %v", err)
 	}
 
-	responsibility := observation.MemberResponsibility{
+	responsibility := matter.MemberResponsibility{
 		ReadDbs:      userConfig.Read,
 		ReadWriteDbs: userConfig.ReadWrite,
 		CreatorDbs:   userConfig.Creator,

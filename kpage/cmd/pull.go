@@ -14,6 +14,7 @@ import (
 )
 
 // Define the "pull" action command
+
 var pullCmd = &cobra.Command{
 	Use:   "pull",
 	Short: "Pull a page from a database",
